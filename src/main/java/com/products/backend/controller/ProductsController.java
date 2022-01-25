@@ -21,14 +21,14 @@ import com.products.backend.helper.ExcelHelper;
 import com.products.backend.request.productsInfoRequest;
 import com.products.backend.response.ResponseMessage;
 import com.products.backend.response.productsInfoResponse;
-import com.products.backend.service.ProductHistoryService;
+import com.products.backend.service.ProductService;
 
 @CrossOrigin("http://localhost:8081")
 @Controller
 @RequestMapping("/api/products")
 public class ProductsController {
 	 @Autowired
-	  ProductHistoryService fileService;
+	  ProductService productService;
 
 	  @RequestMapping(value ="/upload", method = RequestMethod.POST,
 			    consumes = {"multipart/form-data"})
@@ -37,7 +37,7 @@ public class ProductsController {
 
 	    if (ExcelHelper.hasExcelFormat(file)) {
 	      try {
-	        fileService.save(file);
+	    	  productService.save(file);
 
 	        message = "Uploaded the file successfully: " + file.getOriginalFilename();
 	        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -52,9 +52,9 @@ public class ProductsController {
 	  }
 
 	  @PostMapping("/productsInformation")
-	  public ResponseEntity<productsInfoResponse> getAllProductsInformation(@RequestBody productsInfoRequest request) {
+	  public ResponseEntity<productsInfoResponse> getProductInformation(@RequestBody productsInfoRequest request) {
 	    try {
-	    	productsInfoResponse ProductsHistorys = fileService.getProductsInformation(request);
+	    	productsInfoResponse ProductsHistorys = productService.getProductsInformation(request);
 
 	      return new ResponseEntity<>(ProductsHistorys, HttpStatus.OK);
 	    } catch (Exception e) {
@@ -62,16 +62,16 @@ public class ProductsController {
 	    }
 	  }
 	  
-	  @GetMapping("/productsHistory/{productid}")
+	  @GetMapping("/priceHistory/{productid}")
 	  public ResponseEntity<List<BigDecimal>> getAllProductsHistory(@PathVariable(value="productid") Integer productId) {
 	    try {
-	      List<BigDecimal> ProductsHistorys = fileService.getAllProductsHistoryByProductId(productId);
+	      List<BigDecimal> priceHistory = productService.getAllPriceHistoryByProductId(productId);
 
-	      if (ProductsHistorys.isEmpty()) {
+	      if (priceHistory.isEmpty()) {
 	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	      }
 
-	      return new ResponseEntity<>(ProductsHistorys, HttpStatus.OK);
+	      return new ResponseEntity<>(priceHistory, HttpStatus.OK);
 	    } catch (Exception e) {
 	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }

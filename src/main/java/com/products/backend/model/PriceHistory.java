@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "product_history", schema = "product")
+@Table(name = "price_history", schema = "product")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProductsHistory {
+public class PriceHistory {
 	 
 	  @Id
 	  @Column(name = "history_id")

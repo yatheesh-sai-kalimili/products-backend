@@ -22,7 +22,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.products.backend.model.ProductsHistory;
+import com.products.backend.model.PriceHistory;
 
 
 
@@ -42,13 +42,13 @@ public class ExcelHelper {
 	}
 
 
-	public static List<ProductsHistory> excelToProductsHistory(InputStream is) throws ParseException {
+	public static List<PriceHistory> excelToProductsHistory(InputStream is) throws ParseException {
 		try {
 
 			Workbook workbook = WorkbookFactory.create(is);
 			Sheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> rows = sheet.iterator();
-			List<ProductsHistory> ProductsHistorys = new ArrayList<ProductsHistory>();
+			List<PriceHistory> ProductsHistorys = new ArrayList<PriceHistory>();
 			boolean notEmpty = true;
 			int rowNumber = 0;
 			while (rows.hasNext() && notEmpty) {
@@ -62,7 +62,7 @@ public class ExcelHelper {
 
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-				ProductsHistory ProductsHistory = new ProductsHistory();
+				PriceHistory ProductsHistory = new PriceHistory();
 
 				int cellIdx = 0;
 				while (cellsInRow.hasNext()) {
