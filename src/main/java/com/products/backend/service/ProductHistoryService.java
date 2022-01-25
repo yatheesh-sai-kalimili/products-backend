@@ -34,6 +34,17 @@ public class ProductHistoryService {
       throw new RuntimeException("fail to store excel data: " + e.getMessage());
     }
   }
+  public productsInfoResponse getProductsInformation(productsInfoRequest request) {
+		
+		Optional<ProductsDetails> pd = productInfoRepo.findById(request.getProductId());
+		ProductsHistory pdHistory = repository.findByProductIdAndDate(request.getProductId(),request.getRequestDate());
+		productsInfoResponse productsInfo = new productsInfoResponse();
+		productsInfo.setName(pd.get().getProductName());
+		productsInfo.setPrice(pdHistory.getPriceOnThatDay());
+		productsInfo.setInterestRate(pd.get().getInterestRate());
+		
+		return productsInfo;
+	}
   public List<BigDecimal> getAllProductsHistoryByProductId(Integer productId) {
 	  return repository.findByProductId(productId);
   }

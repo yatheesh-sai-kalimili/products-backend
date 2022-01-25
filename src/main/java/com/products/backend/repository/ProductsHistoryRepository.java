@@ -14,4 +14,8 @@ public interface ProductsHistoryRepository extends JpaRepository<ProductsHistory
 
 	@Query(nativeQuery=true, value="select price_on_that_day from product.product_history where product_id = ?1 and history_date > current_date ORDER BY history_date LIMIT 3")
 	List<BigDecimal> findByProductId(Integer productId);
+	
+	@Query(nativeQuery=true, value="select * from product.product_history where product_id = ?1 and history_date =?2")
+	ProductsHistory findByProductIdAndDate(Integer productId, Date requestDate);
+
 }
