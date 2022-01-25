@@ -51,5 +51,19 @@ public class ProductsController {
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
 	  }
 
-	 
+	  @GetMapping("/productsHistory/{productid}")
+	  public ResponseEntity<List<BigDecimal>> getAllProductsHistory(@PathVariable(value="productid") Integer productId) {
+	    try {
+	      List<BigDecimal> ProductsHistorys = fileService.getAllProductsHistoryByProductId(productId);
+
+	      if (ProductsHistorys.isEmpty()) {
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	      }
+
+	      return new ResponseEntity<>(ProductsHistorys, HttpStatus.OK);
+	    } catch (Exception e) {
+	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+
 }

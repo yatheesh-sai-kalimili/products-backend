@@ -34,6 +34,9 @@ public class ProductHistoryService {
       throw new RuntimeException("fail to store excel data: " + e.getMessage());
     }
   }
+  public List<BigDecimal> getAllProductsHistoryByProductId(Integer productId) {
+	  return repository.findByProductId(productId);
+  }
 
 
 }
