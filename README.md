@@ -31,7 +31,9 @@ Table_name: price_history
  
  Note: Please create tables for testing all the endpoints as automatic table creation is having issues with the data type of the columns.
  
+ Swagger Screen Shot:
  https://user-images.githubusercontent.com/98400559/151169305-140b96ce-cb52-4bf0-8f4b-e47415fdac0c.PNG
+ 
  
  
  
