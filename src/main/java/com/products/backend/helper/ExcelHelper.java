@@ -73,7 +73,7 @@ public class ExcelHelper {
 						if(currentCell.getCellType().name().compareTo("STRING")==0) {
 							SimpleDateFormat formatter=new SimpleDateFormat("dd-MMM-yyyy"); 
 							ProductsHistory.setHistoryDate(formatter.parse(currentCell.getStringCellValue()));
-							//System.out.println(currentCell);
+							
 							break;
 						}
 						ProductsHistory.setHistoryDate(currentCell.getDateCellValue());

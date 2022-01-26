@@ -20,34 +20,39 @@ import com.products.backend.response.productsInfoResponse;
 
 @Service
 public class ProductService {
-  @Autowired
-  PriceHistoryRepository repository;
-  
-  @Autowired
-  ProductsInformationRepository productInfoRepo;
+	@Autowired
+	PriceHistoryRepository repository;
 
-  public void save(MultipartFile file) throws ParseException {
-    try {
-      List<PriceHistory> productHistory = ExcelHelper.excelToProductsHistory(file.getInputStream());
-      repository.saveAll(productHistory);
-    } catch (IOException e) {
-      throw new RuntimeException("fail to store excel data: " + e.getMessage());
-    }
-  }
-  public productsInfoResponse getProductsInformation(productsInfoRequest request) {
-		
+	@Autowired
+	ProductsInformationRepository productInfoRepo;
+
+	public void save(MultipartFile file) throws ParseException {
+		try {
+			List<PriceHistory> productHistory = ExcelHelper.excelToProductsHistory(file.getInputStream());
+			repository.saveAll(productHistory);
+		} catch (IOException e) {
+			throw new RuntimeException("fail to store excel data: " + e.getMessage());
+		}
+	}
+	public productsInfoResponse getProductsInformation(productsInfoRequest request) {
+
 		Optional<ProductsDetails> pd = productInfoRepo.findById(request.getProductId());
 		PriceHistory pdHistory = repository.findByProductIdAndDate(request.getProductId(),request.getRequestDate());
 		productsInfoResponse productsInfo = new productsInfoResponse();
 		productsInfo.setName(pd.get().getProductName());
 		productsInfo.setPrice(pdHistory.getPriceOnThatDay());
 		productsInfo.setInterestRate(pd.get().getInterestRate());
-		
+
 		return productsInfo;
 	}
-  public List<BigDecimal> getAllPriceHistoryByProductId(Integer productId) {
-	  return repository.findByProductId(productId);
-  }
+	public List<BigDecimal> getAllPriceHistoryByProductId(Integer productId) {
+		return repository.findByProductId(productId);
+	}
+
+	public List<PriceHistory> getAllPriceHistory() {
+
+		return repository.findAll();
+	}
 
 
 }

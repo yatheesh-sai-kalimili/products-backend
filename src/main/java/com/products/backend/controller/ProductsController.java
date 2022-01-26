@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.products.backend.helper.ExcelHelper;
+import com.products.backend.model.PriceHistory;
 import com.products.backend.request.productsInfoRequest;
 import com.products.backend.response.ResponseMessage;
 import com.products.backend.response.productsInfoResponse;
 import com.products.backend.service.ProductService;
 
-@CrossOrigin("http://localhost:8081")
+@CrossOrigin("http://localhost:4200")
 @Controller
 @RequestMapping("/api/products")
 public class ProductsController {
@@ -63,9 +64,24 @@ public class ProductsController {
 	  }
 	  
 	  @GetMapping("/priceHistory/{productid}")
-	  public ResponseEntity<List<BigDecimal>> getAllProductsHistory(@PathVariable(value="productid") Integer productId) {
+	  public ResponseEntity<List<BigDecimal>> getAllPriceHistoryByProductId(@PathVariable(value="productid") Integer productId) {
 	    try {
 	      List<BigDecimal> priceHistory = productService.getAllPriceHistoryByProductId(productId);
+
+	      if (priceHistory.isEmpty()) {
+	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	      }
+
+	      return new ResponseEntity<>(priceHistory, HttpStatus.OK);
+	    } catch (Exception e) {
+	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+	  
+	  @GetMapping("/priceHistory")
+	  public ResponseEntity<List<PriceHistory>> getAllProductsHistory() {
+	    try {
+	      List<PriceHistory> priceHistory = productService.getAllPriceHistory();
 
 	      if (priceHistory.isEmpty()) {
 	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
