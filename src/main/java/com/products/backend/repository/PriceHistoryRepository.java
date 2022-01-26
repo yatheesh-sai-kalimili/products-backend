@@ -10,6 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.products.backend.model.PriceHistory;
 
+/**
+ * @author yatheesh sai
+ * PriceHistoryRepository which handle findByProductId and findByProductDateAndProductId queries 
+ *
+ */
 public interface PriceHistoryRepository extends JpaRepository<PriceHistory, BigInteger>{
 
 	@Query(nativeQuery=true, value="select price_on_that_day from product.price_history where product_id = ?1 and history_date > current_date ORDER BY history_date LIMIT 3")

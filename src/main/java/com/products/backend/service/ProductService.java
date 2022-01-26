@@ -18,6 +18,11 @@ import com.products.backend.repository.ProductsInformationRepository;
 import com.products.backend.request.productsInfoRequest;
 import com.products.backend.response.productsInfoResponse;
 
+/**
+ * @author yatheesh sai
+ * Product Service Class which handles methods save excel file, getProductsInformation, getAllPriceHistoryByProductId, getAllPriceHistory
+ *
+ */
 @Service
 public class ProductService {
 	@Autowired
@@ -26,6 +31,10 @@ public class ProductService {
 	@Autowired
 	ProductsInformationRepository productInfoRepo;
 
+	/**
+	 * @param file (Excel file)
+	 * @throws ParseException
+	 */
 	public void save(MultipartFile file) throws ParseException {
 		try {
 			List<PriceHistory> productHistory = ExcelHelper.excelToProductsHistory(file.getInputStream());
@@ -34,6 +43,11 @@ public class ProductService {
 			throw new RuntimeException("fail to store excel data: " + e.getMessage());
 		}
 	}
+	
+	/**
+	 * @param request
+	 * @return productsInfoResponse(price, name, interest rate)
+	 */
 	public productsInfoResponse getProductsInformation(productsInfoRequest request) {
 
 		Optional<ProductsDetails> pd = productInfoRepo.findById(request.getProductId());
@@ -45,10 +59,19 @@ public class ProductService {
 
 		return productsInfo;
 	}
+	
+	/**
+	 * @param productId
+	 * @return List of next three day prices of the product
+	 */
 	public List<BigDecimal> getAllPriceHistoryByProductId(Integer productId) {
 		return repository.findByProductId(productId);
 	}
+	
 
+	/**
+	 * @return List of priceHistory data
+	 */
 	public List<PriceHistory> getAllPriceHistory() {
 
 		return repository.findAll();

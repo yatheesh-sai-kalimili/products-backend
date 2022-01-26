@@ -27,11 +27,19 @@ import com.products.backend.model.PriceHistory;
 
 
 
+/**
+ * @author yatheesh sai
+ *
+ */
 public class ExcelHelper {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	static String[] HEADERs = { "Date", "Price Per Lot", "Product ID"};
 	static String SHEET = "Product";
 
+	/**
+	 * @param file
+	 * @return boolean (true or false)
+	 */
 	public static boolean hasExcelFormat(MultipartFile file) {
 
 		if (!TYPE.equals(file.getContentType())) {
@@ -42,6 +50,11 @@ public class ExcelHelper {
 	}
 
 
+	/**
+	 * @param is (Input Stream)
+	 * @return List of PriceHistory data to save in db
+	 * @throws ParseException
+	 */
 	public static List<PriceHistory> excelToProductsHistory(InputStream is) throws ParseException {
 		try {
 
@@ -76,7 +89,8 @@ public class ExcelHelper {
 							
 							break;
 						}
-						ProductsHistory.setHistoryDate(currentCell.getDateCellValue());
+						
+						ProductsHistory.setHistoryDate(currentCell.getDateCellValue());	
 						
 						break;
 

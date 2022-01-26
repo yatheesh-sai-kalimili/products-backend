@@ -24,73 +24,92 @@ import com.products.backend.response.ResponseMessage;
 import com.products.backend.response.productsInfoResponse;
 import com.products.backend.service.ProductService;
 
+/**
+ * @author yatheesh sai
+ *
+ */
 @CrossOrigin("http://localhost:4200")
 @Controller
 @RequestMapping("/api/products")
 public class ProductsController {
-	 @Autowired
-	  ProductService productService;
+	@Autowired
+	ProductService productService;
 
-	  @RequestMapping(value ="/upload", method = RequestMethod.POST,
-			    consumes = {"multipart/form-data"})
-	  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-	    String message = "";
+	/**
+	 * @param excel file
+	 * @return message (either success or failure
+	 */
+	@RequestMapping(value ="/upload", method = RequestMethod.POST,
+			consumes = {"multipart/form-data"})
+	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+		String message = "";
 
-	    if (ExcelHelper.hasExcelFormat(file)) {
-	      try {
-	    	  productService.save(file);
+		if (ExcelHelper.hasExcelFormat(file)) {
+			try {
+				productService.save(file);
 
-	        message = "Uploaded the file successfully: " + file.getOriginalFilename();
-	        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-	      } catch (Exception e) {
-	        message = "Could not upload the file: " + file.getOriginalFilename() +  e.getMessage() + "!";
-	        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-	      }
-	    }
+				message = "Uploaded the file successfully: " + file.getOriginalFilename();
+				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+			} catch (Exception e) {
+				message = "Could not upload the file: " + file.getOriginalFilename() +  e.getMessage() + "!";
+				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+			}
+		}
 
-	    message = "Please upload an excel file!";
-	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
-	  }
+		message = "Please upload an excel file!";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
+	}
 
-	  @PostMapping("/productsInformation")
-	  public ResponseEntity<productsInfoResponse> getProductInformation(@RequestBody productsInfoRequest request) {
-	    try {
-	    	productsInfoResponse ProductsHistorys = productService.getProductsInformation(request);
+	/**
+	 * @param request - productId, requestDate
+	 * @return productsInfoResponse - price, name, interestRate
+	 */
+	@PostMapping("/productsInformation")
+	public ResponseEntity<productsInfoResponse> getProductInformation(@RequestBody productsInfoRequest request) {
+		try {
+			productsInfoResponse ProductsHistorys = productService.getProductsInformation(request);
 
-	      return new ResponseEntity<>(ProductsHistorys, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	  }
-	  
-	  @GetMapping("/priceHistory/{productid}")
-	  public ResponseEntity<List<BigDecimal>> getAllPriceHistoryByProductId(@PathVariable(value="productid") Integer productId) {
-	    try {
-	      List<BigDecimal> priceHistory = productService.getAllPriceHistoryByProductId(productId);
+			return new ResponseEntity<>(ProductsHistorys, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-	      if (priceHistory.isEmpty()) {
-	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	      }
+	/**
+	 * @param productId
+	 * @return List of prices for next three days of product
+	 */
+	@GetMapping("/priceHistory/{productid}")
+	public ResponseEntity<List<BigDecimal>> getAllPriceHistoryByProductId(@PathVariable(value="productid") Integer productId) {
+		try {
+			List<BigDecimal> priceHistory = productService.getAllPriceHistoryByProductId(productId);
 
-	      return new ResponseEntity<>(priceHistory, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	  }
-	  
-	  @GetMapping("/priceHistory")
-	  public ResponseEntity<List<PriceHistory>> getAllProductsHistory() {
-	    try {
-	      List<PriceHistory> priceHistory = productService.getAllPriceHistory();
+			if (priceHistory.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
 
-	      if (priceHistory.isEmpty()) {
-	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	      }
+			return new ResponseEntity<>(priceHistory, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
-	      return new ResponseEntity<>(priceHistory, HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	  }
+	/**
+	 * @return List of price history
+	 */
+	@GetMapping("/priceHistory")
+	public ResponseEntity<List<PriceHistory>> getAllProductsHistory() {
+		try {
+			List<PriceHistory> priceHistory = productService.getAllPriceHistory();
+
+			if (priceHistory.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity<>(priceHistory, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

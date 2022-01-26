@@ -13,6 +13,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * @author yatheesh sai
+ * Entity class for table product_details and schema product
+ *
+ */
 @Entity
 @Table(name = "product_details", schema = "product")
 @Data

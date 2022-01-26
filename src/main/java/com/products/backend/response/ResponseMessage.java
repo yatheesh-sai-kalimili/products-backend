@@ -1,5 +1,10 @@
 package com.products.backend.response;
 
+/**
+ * @author yatheesh sai
+ * Response message class 
+ *
+ */
 public class ResponseMessage {
 	 private String message;
 	  public ResponseMessage(String message) {
